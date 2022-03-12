@@ -8,8 +8,8 @@ extern "C" {
 
 #include <napi.h>
 
-#include "properties/channel.h"
-#include "properties/rpi_hw.h"
+#include "property/channel.h"
+#include "property/rpi_hw.h"
 
 /**
  * The controller that will be used to manipulate the light strip.

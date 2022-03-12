@@ -1,5 +1,11 @@
 {
   "root": true,
-  "plugins": ["prettier"],
-  "extends": ["airbnb-base", "prettier", "plugin:prettier/recommended"]
+  "plugins": ["prettier", "mocha", "chai-friendly"],
+  "extends": [
+    "airbnb-base",
+    "prettier",
+    "plugin:mocha/recommended",
+    "plugin:chai-friendly/recommended",
+    "plugin:prettier/recommended"
+  ]
 }

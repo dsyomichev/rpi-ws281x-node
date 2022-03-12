@@ -1,9 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-bitwise */
-
-const leds = [undefined, undefined];
-
 module.exports = {
   render_wait_time: 0,
 
@@ -19,10 +16,10 @@ module.exports = {
       count: 0,
       strip_type: 0,
       get leds() {
-        return leds[0];
+        return this._leds;
       },
       set leds(value) {
-        if (this.rpi_hw) leds[0] = value;
+        if (this.rpi_hw) this._leds = value;
       },
       brightness: 0,
       wshift: 0,
@@ -30,6 +27,7 @@ module.exports = {
       gshift: 0,
       bshift: 0,
       gamma: undefined,
+      _leds: undefined,
     },
     {
       gpionum: 0,
@@ -37,10 +35,10 @@ module.exports = {
       count: 0,
       strip_type: 0,
       get leds() {
-        return leds[1];
+        return this._leds;
       },
       set leds(value) {
-        if (this.rpi_hw) leds[1] = value;
+        if (this.rpi_hw) this._leds = value;
       },
       brightness: 0,
       wshift: 0,
@@ -48,9 +46,9 @@ module.exports = {
       gshift: 0,
       bshift: 0,
       gamma: undefined,
+      _leds: undefined,
     },
   ],
-
   init() {
     this.rpi_hw = {
       type: 0,
@@ -61,7 +59,7 @@ module.exports = {
     };
 
     for (let i = 0; i < this.channel.length; i += 1) {
-      this.channel[i].leds = new Uint32Array(this.channel[i].count).fill(0x000000);
+      this.channel[i]._leds = new Uint32Array(this.channel[i].count).fill(0x000000);
       this.channel[i].gamma = new Uint32Array(256);
       for (let k = 0; k < 256; k += 1) this.channel[i].gamma[k] = k;
 
@@ -71,13 +69,9 @@ module.exports = {
       this.channel[i].bshift = (this.channel[i].strip_type >> 0) & 0xff;
     }
   },
-
   fini() {},
-
   render() {},
-
   wait() {},
-
   set_custom_gamma_factor(value) {
     for (let i = 0; i < this.channel.length; i += 1) {
       if (this.channel[i].gamma === undefined) return;

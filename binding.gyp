@@ -10,8 +10,8 @@
                         "cflags_cc!": ["-fno-exceptions"],
                         "sources": [
                             "./src/module.cc",
-                            "./src/properties/channel.cc",
-                            "./src/properties/rpi_hw.cc"
+                            "./src/property/channel.cc",
+                            "./src/property/rpi_hw.cc"
                         ],
                         "dependencies": ["rpi_ws281x"],
                         "include_dirs": ["<!(node -p \"require('node-addon-api').include_dir\")", "./lib"],
