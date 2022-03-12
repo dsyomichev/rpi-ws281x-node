@@ -1,0 +1,13 @@
+---
+BasedOnStyle: LLVM
+AccessModifierOffset: '0'
+AlignAfterOpenBracket: AlwaysBreak
+AlignConsecutiveAssignments: 'false'
+AlignConsecutiveDeclarations: 'true'
+AlignEscapedNewlines: Left
+AlignOperands: 'true'
+AlignTrailingComments: 'true'
+ColumnLimit: '120'
+AllowShortFunctionsOnASingleLine: 'false'
+
+...

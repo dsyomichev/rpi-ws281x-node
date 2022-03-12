@@ -1,0 +1,59 @@
+{
+  "name": "rpi-ws281x-node",
+  "version": "1.0.0",
+  "description": "NAPI wrapper around the rpi_ws281x library.",
+  "license": "MIT",
+  "main": "src/loader/rpi_ws281x_node.js",
+  "gypfile": true,
+  "engines": {
+    "node": ">=12"
+  },
+  "declaration": true,
+  "types": "src/loader/rpi_ws281x_node.d.ts",
+  "scripts": {
+    "build": "node-gyp build",
+    "test": "mocha 'test/**/*.spec.js'"
+  },
+  "homepage": "https://github.com/dsyomichev/rpi-ws281x-node#readme",
+  "bugs": {
+    "url": "https://github.com/dsyomichev/rpi-ws281x-node/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dsyomichev/rpi-ws281x-node.git"
+  },
+  "author": {
+    "name": "Daniel Syomichev",
+    "email": "dsyomichev@gmail.com"
+  },
+  "files": [
+    "binding.gyp",
+    "dist/**/*",
+    "lib/**/*",
+    "src/**/*"
+  ],
+  "dependencies": {
+    "bindings": "^1.5.0",
+    "node-addon-api": "^4.3.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "eslint": "^8.10.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "mocha": "^9.2.1",
+    "node-gyp": "^9.0.0"
+  },
+  "keywords": [
+    "napi",
+    "wrapper",
+    "raspberry pi",
+    "neopixel",
+    "led strip",
+    "rpi_ws281x",
+    "rpi",
+    "ws281x"
+  ]
+}
