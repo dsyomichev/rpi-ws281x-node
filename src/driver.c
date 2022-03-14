@@ -77,13 +77,15 @@ napi_value get_render_wait_time_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_bigint_int64(env, ws2811.render_wait_time, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -107,13 +109,15 @@ napi_value get_rpi_hw_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_get_reference_value(env, rpi_hw_obj_ref, &target);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return target;
@@ -137,13 +141,15 @@ napi_value get_freq_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_uint32(env, ws2811.freq, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -157,7 +163,8 @@ napi_value set_freq_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = parse_arg_value_uint32(env, info, &value, NULL);
@@ -190,13 +197,15 @@ napi_value get_dmanum_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_int32(env, ws2811.dmanum, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -210,7 +219,8 @@ napi_value set_dmanum_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
   status = parse_arg_value_int32(env, info, &value, NULL);
 
@@ -242,13 +252,15 @@ napi_value get_channel_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_get_reference_value(env, channel_arr_ref, &target);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return target;
@@ -272,33 +284,36 @@ napi_value run_init_func(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = ws2811_init(&ws2811);
 
   if (status != WS2811_SUCCESS) {
-    napi_throw_error(env, NULL, ws2811_get_return_t_str(status)); // UPDATE ERROR THROW
+    throw_status_error(env, status);
     return NULL;
   }
 
   status = free_channel_arr(env);
 
   if (status != napi_ok) {
-    printf("Error %d", status);
-    return NULL; // ADD ERROR THROW
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = init_rpi_hw_obj(env, &rpi_hw_obj);
 
   if (status != napi_ok) {
-    return NULL; // ADD ERROR THROW
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = init_channel_arr(env, &channel_arr);
 
   if (status != napi_ok) {
-    return NULL; // ADD ERROR THROW
+    throw_generic_error(env);
+    return NULL;
   }
 
   return NULL;
@@ -322,36 +337,42 @@ napi_value run_fini_func(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
-  if (ws2811.device != NULL) { // THROW ERROR INSTEAD
+  if (ws2811.device == NULL) {
+    throw_init_error(env);
     ws2811_fini(&ws2811);
   }
 
   status = free_rpi_hw_obj(env);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = free_channel_arr(env);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = free_driver_obj(env);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   for (channel_arr_index = 0; channel_arr_index < RPI_PWM_CHANNELS; channel_arr_index++) {
     status = free_channel_leds_arr(env, channel_arr_index);
 
     if (status != napi_ok) {
-      return NULL; // ADD THROW ERROR
+      throw_generic_error(env);
+      return NULL;
     }
   }
 
@@ -375,25 +396,28 @@ napi_value run_render_func(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   if (ws2811.device == NULL) {
-    return NULL; // THROW ERROR INSTEAD
+    throw_init_error(env);
+    return NULL;
   }
 
   for (channel_arr_index = 0; channel_arr_index < RPI_PWM_CHANNELS; channel_arr_index++) {
     status = push_channel_leds_arr(env, channel_arr_index);
 
     if (status != napi_ok) {
-      return NULL; // ADD THROW ERROR
+      throw_generic_error(env);
+      return NULL;
     }
   }
 
   status = ws2811_render(&ws2811);
 
   if (status != WS2811_SUCCESS) {
-    napi_throw_error(env, NULL, ws2811_get_return_t_str(status)); // UPDATE THROW ERROR
+    throw_status_error(env, status);
     return NULL;
   }
 
@@ -417,17 +441,19 @@ napi_value run_wait_func(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
-  if (ws2811.device == NULL) { // THROW ERROR INSTEAD
+  if (ws2811.device == NULL) {
+    throw_init_error(env);
     return NULL;
   }
 
   status = ws2811_wait(&ws2811);
 
   if (status != WS2811_SUCCESS) {
-    napi_throw_error(env, NULL, ws2811_get_return_t_str(status)); // UPDATE THROW ERROR
+    throw_status_error(env, status);
     return NULL;
   }
 
@@ -449,14 +475,15 @@ napi_value run_set_custom_gamma_factor_func(napi_env env, napi_callback_info inf
   double     value;
   prop_data *data;
 
-  if (ws2811.device == NULL) { // THROW ERROR INSTEAD
+  if (ws2811.device == NULL) {
+    throw_init_error(env);
     return NULL;
   }
 
   status = parse_arg_value_double(env, info, &value, (void **)&data);
 
   if (status != napi_ok) {
-    throw_invalid_arg_error(env); // UPDATE THROW ERROR
+    throw_invalid_arg_error(env);
     return NULL;
   }
 

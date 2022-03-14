@@ -29,8 +29,11 @@ napi_status parse_arg_value_uint32(napi_env env, napi_callback_info info, uint32
 napi_status parse_arg_value_int32(napi_env env, napi_callback_info info, int *result, void **data);
 napi_status parse_arg_value_double(napi_env env, napi_callback_info info, double *result, void **data);
 
-napi_status throw_invalid_arg_error(napi_env env);
-
 napi_status free_reference(napi_env env, napi_ref ref);
+
+napi_status throw_invalid_arg_error(napi_env env);
+napi_status throw_init_error(napi_env env);
+napi_status throw_status_error(napi_env env, ws2811_return_t status);
+napi_status throw_generic_error(napi_env env);
 
 #endif

@@ -61,7 +61,8 @@ napi_value get_rpi_hw_type_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   if (ws2811.rpi_hw == NULL) {
@@ -71,7 +72,8 @@ napi_value get_rpi_hw_type_val(napi_env env, napi_callback_info info) {
   status = napi_create_uint32(env, ws2811.rpi_hw->type, &target);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return target;
@@ -95,7 +97,8 @@ napi_value get_rpi_hw_hwver_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   if (ws2811.rpi_hw == NULL) {
@@ -105,7 +108,8 @@ napi_value get_rpi_hw_hwver_val(napi_env env, napi_callback_info info) {
   status = napi_create_uint32(env, ws2811.rpi_hw->hwver, &target);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return target;
@@ -129,7 +133,8 @@ napi_value get_rpi_hw_periph_base_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   if (ws2811.rpi_hw == NULL) {
@@ -139,7 +144,8 @@ napi_value get_rpi_hw_periph_base_val(napi_env env, napi_callback_info info) {
   status = napi_create_uint32(env, ws2811.rpi_hw->periph_base, &target);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return target;
@@ -163,7 +169,8 @@ napi_value get_rpi_hw_videocore_base_val(napi_env env, napi_callback_info info) 
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   if (ws2811.rpi_hw == NULL) {
@@ -173,7 +180,8 @@ napi_value get_rpi_hw_videocore_base_val(napi_env env, napi_callback_info info) 
   status = napi_create_uint32(env, ws2811.rpi_hw->videocore_base, &target);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return target;
@@ -198,7 +206,8 @@ napi_value get_rpi_hw_desc_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   if (ws2811.rpi_hw == NULL || ws2811.rpi_hw->desc == NULL) {
@@ -209,7 +218,8 @@ napi_value get_rpi_hw_desc_val(napi_env env, napi_callback_info info) {
   status = napi_create_string_utf8(env, ws2811.rpi_hw->desc, length, &target);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return target;

@@ -11,7 +11,8 @@ napi_value make_module(napi_env env, napi_value exports) {
   status = init_driver_obj(env, &driver_obj);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return driver_obj;
@@ -149,11 +150,6 @@ napi_status parse_arg_value_double(napi_env env, napi_callback_info info, double
   return status;
 }
 
-napi_status throw_invalid_arg_error(napi_env env) { // UPDATE THIS
-  static const char message[] = "Invalid argument.";
-  return napi_throw_error(env, NULL, message);
-}
-
 napi_status free_reference(napi_env env, napi_ref ref) {
   napi_status status;
   int         i;
@@ -178,4 +174,31 @@ napi_status free_reference(napi_env env, napi_ref ref) {
   }
 
   return status;
+}
+
+napi_status throw_invalid_arg_error(napi_env env) {
+  static const char code[] = "ERR_INVALID_ARG_TYPE";
+  static const char message[] = "The argument must match the property type.";
+
+  return napi_throw_type_error(env, code, message);
+}
+
+napi_status throw_init_error(napi_env env) {
+  static const char code[] = "ERR_INVALID_STATE";
+  static const char message[] = "The driver must be initialized before use.";
+
+  return napi_throw_type_error(env, code, message);
+}
+
+napi_status throw_generic_error(napi_env env) {
+  static const char code[] = "ERR_SYSTEM_ERROR";
+  static const char message[] = "An unknown error has occured.";
+
+  return napi_throw_error(env, code, message);
+}
+
+napi_status throw_status_error(napi_env env, ws2811_return_t status) {
+  static const char code[] = "ERR_INVALID_STATE";
+
+  return napi_throw_error(env, code, ws2811_get_return_t_str(status));
 }

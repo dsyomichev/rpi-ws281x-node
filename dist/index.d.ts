@@ -22,23 +22,15 @@ export interface rpi_hw {
 
 export interface ws2811 {
   readonly render_wait_time: number;
-
   readonly rpi_hw?: rpi_hw;
-
   freq: number;
-
   dmanum: number;
-
-  readonly channel: [ws2811_channel_t, ws2811_channel_t];
+  readonly channel: [ws2811_channel, ws2811_channel];
 
   readonly init: () => void;
-
   readonly fini: () => void;
-
   readonly render: () => void;
-
   readonly wait: () => void;
-
   readonly set_custom_gamma_factor: (value: number) => void;
 }
 

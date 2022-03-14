@@ -163,13 +163,15 @@ napi_value get_channel_gpionum_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_int32(env, ws2811.channel[data->channel_arr_index].gpionum, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -183,7 +185,7 @@ napi_value set_channel_gpionum_val(napi_env env, napi_callback_info info) {
   status = parse_arg_value_int32(env, info, &value, (void **)&data);
 
   if (status != napi_ok) {
-    throw_invalid_arg_error(env); // UPDATE THROW ERROR
+    throw_invalid_arg_error(env);
     return NULL;
   }
 
@@ -211,13 +213,15 @@ napi_value get_channel_invert_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_int32(env, ws2811.channel[data->channel_arr_index].invert, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -231,7 +235,7 @@ napi_value set_channel_invert_val(napi_env env, napi_callback_info info) {
   status = parse_arg_value_int32(env, info, &value, (void **)&data);
 
   if (status != napi_ok) {
-    throw_invalid_arg_error(env); // UPDATE THROW ERROR
+    throw_invalid_arg_error(env);
     return NULL;
   }
 
@@ -259,13 +263,15 @@ napi_value get_channel_count_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_int32(env, ws2811.channel[data->channel_arr_index].count, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -279,7 +285,7 @@ napi_value set_channel_count_val(napi_env env, napi_callback_info info) {
   status = parse_arg_value_int32(env, info, &value, (void **)&data);
 
   if (status != napi_ok) {
-    throw_invalid_arg_error(env); // UPDATE THROW ERROR
+    throw_invalid_arg_error(env);
     return NULL;
   }
 
@@ -307,13 +313,15 @@ napi_value get_channel_strip_type_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_int32(env, ws2811.channel[data->channel_arr_index].strip_type, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -327,7 +335,7 @@ napi_value set_channel_strip_type_val(napi_env env, napi_callback_info info) {
   status = parse_arg_value_int32(env, info, &value, (void **)&data);
 
   if (status != napi_ok) {
-    throw_invalid_arg_error(env); // UPDATE THROW ERROR
+    throw_invalid_arg_error(env);
     return NULL;
   }
 
@@ -374,13 +382,15 @@ napi_value get_channel_brightness_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_int32(env, ws2811.channel[data->channel_arr_index].brightness, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -394,7 +404,7 @@ napi_value set_channel_brightness_val(napi_env env, napi_callback_info info) {
   status = parse_arg_value_int32(env, info, &value, (void **)&data);
 
   if (status != napi_ok) {
-    throw_invalid_arg_error(env); // UPDATE THROW ERROR
+    throw_invalid_arg_error(env);
     return NULL;
   }
 
@@ -422,13 +432,15 @@ napi_value get_channel_wshift_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_int32(env, ws2811.channel[data->channel_arr_index].wshift, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -455,13 +467,15 @@ napi_value get_channel_rshift_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_int32(env, ws2811.channel[data->channel_arr_index].rshift, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -488,13 +502,15 @@ napi_value get_channel_gshift_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_int32(env, ws2811.channel[data->channel_arr_index].gshift, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -521,13 +537,15 @@ napi_value get_channel_bshift_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   status = napi_create_int32(env, ws2811.channel[data->channel_arr_index].bshift, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
@@ -555,7 +573,8 @@ napi_value get_channel_gamma_val(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   channel = &ws2811.channel[data->channel_arr_index];
@@ -567,7 +586,8 @@ napi_value get_channel_gamma_val(napi_env env, napi_callback_info info) {
   status = napi_create_arraybuffer(env, GAMMA_TABLE_SIZE * sizeof(uint8_t), (void **)&buffer_data, &buffer);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   for (gamma_table_index = 0; gamma_table_index < GAMMA_TABLE_SIZE; gamma_table_index++) {
@@ -577,7 +597,8 @@ napi_value get_channel_gamma_val(napi_env env, napi_callback_info info) {
   status = napi_create_typedarray(env, napi_uint8_array, GAMMA_TABLE_SIZE, buffer, 0, &result);
 
   if (status != napi_ok) {
-    return NULL; // ADD THROW ERROR
+    throw_generic_error(env);
+    return NULL;
   }
 
   return result;
