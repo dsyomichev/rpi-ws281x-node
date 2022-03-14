@@ -11,7 +11,7 @@ napi_value make_module(napi_env env, napi_value exports) {
   status = init_driver_obj(env, &driver_obj);
 
   if (status != napi_ok) {
-    return NULL;
+    return NULL; // ADD THROW ERROR
   }
 
   return driver_obj;
@@ -62,26 +62,12 @@ napi_property_descriptor make_value_prop(const char *name, napi_value value, voi
   return descriptor;
 }
 
-napi_status parse_value_uint32(napi_env env, napi_callback_info info, uint32_t *result, void **data) {
-  napi_status    status;
-  napi_valuetype type;
-  napi_value     argv[1];
-  size_t         argc = 1;
-  double         double_val;
+napi_status parse_arg_value_uint32(napi_env env, napi_callback_info info, uint32_t *result, void **data) {
+  napi_status status;
+  napi_value  arg;
+  double      double_val;
 
-  status = napi_get_cb_info(env, info, &argc, argv, NULL, data);
-
-  if (status != napi_ok) {
-    return status;
-  }
-
-  status = napi_typeof(env, argv[0], &type);
-
-  if (type != napi_number) {
-    return napi_invalid_arg;
-  }
-
-  status = napi_get_value_double(env, argv[0], &double_val);
+  status = parse_arg_value_double(env, info, &double_val, data);
 
   if (status != napi_ok) {
     return status;
@@ -91,35 +77,27 @@ napi_status parse_value_uint32(napi_env env, napi_callback_info info, uint32_t *
     return napi_invalid_arg;
   }
 
-  status = napi_get_value_uint32(env, argv[0], result);
-
-  if (status != napi_ok) {
-    return napi_invalid_arg;
-  }
-
-  return napi_ok;
-}
-
-napi_status parse_value_int32(napi_env env, napi_callback_info info, int *result, void **data) {
-  napi_status    status;
-  napi_valuetype type;
-  napi_value     argv[1];
-  size_t         argc = 1;
-  double         double_val;
-
-  status = napi_get_cb_info(env, info, &argc, argv, NULL, data);
+  status = napi_create_double(env, double_val, &arg);
 
   if (status != napi_ok) {
     return status;
   }
 
-  status = napi_typeof(env, argv[0], &type);
+  status = napi_get_value_uint32(env, arg, result);
 
-  if (type != napi_number) {
-    return napi_invalid_arg;
+  if (status != napi_ok) {
+    return status;
   }
 
-  status = napi_get_value_double(env, argv[0], &double_val);
+  return status;
+}
+
+napi_status parse_arg_value_int32(napi_env env, napi_callback_info info, int *result, void **data) {
+  napi_status status;
+  napi_value  arg;
+  double      double_val;
+
+  status = parse_arg_value_double(env, info, &double_val, data);
 
   if (status != napi_ok) {
     return status;
@@ -129,16 +107,22 @@ napi_status parse_value_int32(napi_env env, napi_callback_info info, int *result
     return napi_invalid_arg;
   }
 
-  status = napi_get_value_int32(env, argv[0], result);
+  status = napi_create_double(env, double_val, &arg);
 
   if (status != napi_ok) {
-    return napi_invalid_arg;
+    return status;
   }
 
-  return napi_ok;
+  status = napi_get_value_int32(env, arg, result);
+
+  if (status != napi_ok) {
+    return status;
+  }
+
+  return status;
 }
 
-napi_status parse_value_double(napi_env env, napi_callback_info info, double *result, void **data) {
+napi_status parse_arg_value_double(napi_env env, napi_callback_info info, double *result, void **data) {
   napi_status    status;
   napi_valuetype type;
   napi_value     argv[1];
@@ -162,10 +146,10 @@ napi_status parse_value_double(napi_env env, napi_callback_info info, double *re
     return napi_invalid_arg;
   }
 
-  return napi_ok;
+  return status;
 }
 
-napi_status throw_invalid_argument_error(napi_env env) {
+napi_status throw_invalid_argument_error(napi_env env) { // UPDATE THIS
   static const char message[] = "Invalid argument.";
   return napi_throw_error(env, NULL, message);
 }
@@ -180,9 +164,17 @@ napi_status free_reference(napi_env env, napi_ref ref) {
   if (status == napi_ok) {
     for (i = count; i > 0; i--) {
       status = napi_reference_unref(env, ref, &count);
+
+      if (status != napi_ok) {
+        return status;
+      }
     }
 
     status = napi_delete_reference(env, ref);
+
+    if (status != napi_ok) {
+      return status;
+    }
   }
 
   return status;

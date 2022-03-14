@@ -1,29 +1,39 @@
+const FREQ = 800000;
+const DMANUM = 10;
+
+const GPIONUM_1 = 18;
+const GPIONUM_2 = 13;
+const INVERT = 1;
+const COUNT = 100;
+const STRIP_TYPE = 0x00081000;
+const BRIGHNESS = 255;
+const LEDS = new Uint32Array(COUNT).fill(0x000000);
+const WSHIFT = 0;
+const RSHIFT = 8;
+const GSHIFT = 16;
+const BSHIFT = 0;
+const GAMMA = new Uint8Array(256);
+
+for (let i = 0; i < 256; i += 1) {
+  GAMMA[i] = i;
+}
+
+// eslint-disable-next-line camelcase
+const make_gamma_table = (buffer, value) => {
+  for (let i = 0; i < 256; i += 1) {
+    // eslint-disable-next-line no-param-reassign
+    buffer[i] = value > 0 ? Math.floor((i / 255.0) ** value * 255.0 + 0.5) : i;
+  }
+};
+
+const GAMMA_FACTOR = 50;
+const MODIFIED_GAMMA = new Uint8Array(256);
+make_gamma_table(MODIFIED_GAMMA, GAMMA_FACTOR);
+
+if (!process.getuid || process.getuid() !== 0) throw new Error('Tests must run as root.');
+
 const { expect } = require('chai');
-
-const {
-  FREQ,
-  DMANUM,
-  GPIONUM_1,
-  GPIONUM_2,
-  INVERT,
-  COUNT,
-  STRIP_TYPE,
-  BRIGHNESS,
-  LEDS,
-  WSHIFT,
-  RSHIFT,
-  GSHIFT,
-  BSHIFT,
-  GAMMA,
-  FACTOR,
-  MGAMMA,
-} = require('./const');
-
 const driver = require('../dist/index');
-
-const unsupported = !process.getuid || process.getuid() !== 0;
-
-if (unsupported) throw new Error('Tests can only run on a raspberry pi machine as root.');
 
 describe('rpi_ws281x_node', function () {
   describe('render_wait_time', function () {
@@ -289,15 +299,21 @@ describe('rpi_ws281x_node', function () {
 
   describe('set_custom_gamma_factor()', function () {
     it('should execute without throwing', function () {
-      expect(driver.set_custom_gamma_factor(FACTOR)).to.not.throw;
+      expect(driver.set_custom_gamma_factor(GAMMA_FACTOR)).to.not.throw;
     });
 
     it('should update the gamma tables of each channal', function () {
       for (let k = 0; k < driver.channel.length; k += 1) {
         expect(driver.channel[k]).to.have.property('gamma');
         expect(driver.channel[k].gamma).to.exist;
-        expect(driver.channel[k].gamma).to.deep.equal(MGAMMA);
+        expect(driver.channel[k].gamma).to.deep.equal(MODIFIED_GAMMA);
       }
+    });
+  });
+
+  describe('fini()', function () {
+    it('should execute without throwing', function () {
+      expect(driver.fini()).to.not.throw;
     });
   });
 });

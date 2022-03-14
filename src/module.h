@@ -20,9 +20,9 @@ napi_property_descriptor make_accessor_prop(const char *name, napi_callback get,
 napi_property_descriptor make_method_prop(const char *name, napi_callback method, void *data);
 napi_property_descriptor make_value_prop(const char *name, napi_value value, void *data);
 
-napi_status parse_value_uint32(napi_env env, napi_callback_info info, uint32_t *result, void **data);
-napi_status parse_value_int32(napi_env env, napi_callback_info info, int *result, void **data);
-napi_status parse_value_double(napi_env env, napi_callback_info info, double *result, void **data);
+napi_status parse_arg_value_uint32(napi_env env, napi_callback_info info, uint32_t *result, void **data);
+napi_status parse_arg_value_int32(napi_env env, napi_callback_info info, int *result, void **data);
+napi_status parse_arg_value_double(napi_env env, napi_callback_info info, double *result, void **data);
 
 napi_status throw_invalid_argument_error(napi_env env);
 

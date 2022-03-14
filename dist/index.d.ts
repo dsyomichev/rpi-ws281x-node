@@ -9,7 +9,7 @@ export interface ws2811_channel {
   readonly rshift: number;
   readonly gshift: number;
   readonly bshift: number;
-  readonly gamma?: Uint32Array;
+  readonly gamma?: Uint8Array;
 }
 
 export interface rpi_hw {
@@ -42,5 +42,5 @@ export interface ws2811 {
   readonly set_custom_gamma_factor: (value: number) => void;
 }
 
-declare const rpi_ws281x_node: ws2811;
-export default rpi_ws281x_node;
+declare const driver: ws2811;
+export default driver;

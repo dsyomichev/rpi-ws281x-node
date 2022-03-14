@@ -4,7 +4,7 @@ napi_ref driver_obj_ref;
 
 napi_status init_driver_obj(napi_env env, napi_value *target) {
   napi_status              status;
-  napi_property_descriptor descriptors[DRIVER_PROPS];
+  napi_property_descriptor prop[DRIVER_PROPS];
   napi_value               rpi_hw_obj, channel_arr;
 
   status = napi_create_object(env, target);
@@ -14,20 +14,29 @@ napi_status init_driver_obj(napi_env env, napi_value *target) {
   }
 
   status = init_rpi_hw_obj(env, &rpi_hw_obj);
+
+  if (status != napi_ok) {
+    return status;
+  }
+
   status = init_channel_arr(env, &channel_arr);
 
-  descriptors[0] = make_render_wait_time_prop();
-  descriptors[1] = make_rpi_hw_prop();
-  descriptors[2] = make_freq_prop();
-  descriptors[3] = make_dmanum_prop();
-  descriptors[4] = make_channel_prop();
-  descriptors[5] = make_init_prop();
-  descriptors[6] = make_fini_prop();
-  descriptors[7] = make_render_prop();
-  descriptors[8] = make_wait_prop();
-  descriptors[9] = make_set_custom_gamma_factor_prop();
+  if (status != napi_ok) {
+    return status;
+  }
 
-  status = napi_define_properties(env, *target, DRIVER_PROPS, descriptors);
+  prop[0] = make_render_wait_time_prop();
+  prop[1] = make_rpi_hw_prop();
+  prop[2] = make_freq_prop();
+  prop[3] = make_dmanum_prop();
+  prop[4] = make_channel_prop();
+  prop[5] = make_init_prop();
+  prop[6] = make_fini_prop();
+  prop[7] = make_render_prop();
+  prop[8] = make_wait_prop();
+  prop[9] = make_set_custom_gamma_factor_prop();
+
+  status = napi_define_properties(env, *target, DRIVER_PROPS, prop);
 
   if (status != napi_ok) {
     return status;
@@ -82,7 +91,7 @@ napi_value get_rpi_hw_val(napi_env env, napi_callback_info info) {
   status = napi_get_reference_value(env, rpi_hw_obj_ref, &target);
 
   if (status != napi_ok) {
-    return NULL;
+    return NULL; // ADD THROW ERROR
   }
 
   return target;
@@ -101,7 +110,7 @@ napi_value get_freq_val(napi_env env, napi_callback_info info) {
   status = napi_create_uint32(env, ws2811.freq, &result);
 
   if (status != napi_ok) {
-    return NULL;
+    return NULL; // ADD THROW ERROR
   }
 
   return result;
@@ -111,7 +120,7 @@ napi_value set_freq_val(napi_env env, napi_callback_info info) {
   napi_status status;
   uint32_t    value;
 
-  status = parse_value_uint32(env, info, &value, NULL);
+  status = parse_arg_value_uint32(env, info, &value, NULL);
 
   if (status != napi_ok) {
     throw_invalid_argument_error(env);
@@ -136,7 +145,7 @@ napi_value get_dmanum_val(napi_env env, napi_callback_info info) {
   status = napi_create_int32(env, ws2811.dmanum, &result);
 
   if (status != napi_ok) {
-    return NULL;
+    return NULL; // ADD THROW ERROR
   }
 
   return result;
@@ -146,7 +155,7 @@ napi_value set_dmanum_val(napi_env env, napi_callback_info info) {
   napi_status status;
   int         value;
 
-  status = parse_value_int32(env, info, &value, NULL);
+  status = parse_arg_value_int32(env, info, &value, NULL);
 
   if (status != napi_ok) {
     throw_invalid_argument_error(env);
@@ -171,7 +180,7 @@ napi_value get_channel_val(napi_env env, napi_callback_info info) {
   status = napi_get_reference_value(env, channel_arr_ref, &target);
 
   if (status != napi_ok) {
-    return NULL;
+    return NULL; // ADD THROW ERROR
   }
 
   return target;
@@ -190,15 +199,28 @@ napi_value run_init_func(napi_env env, napi_callback_info info) {
   status = ws2811_init(&ws2811);
 
   if (status != WS2811_SUCCESS) {
-    napi_throw_error(env, NULL, ws2811_get_return_t_str(status));
+    napi_throw_error(env, NULL, ws2811_get_return_t_str(status)); // UPDATE ERROR THROW
     return NULL;
   }
 
-  free_rpi_hw_obj(env);
-  free_channel_arr(env);
+  status = free_channel_arr(env);
 
-  init_rpi_hw_obj(env, &rpi_hw_obj);
-  init_channel_arr(env, &channel_arr);
+  if (status != napi_ok) {
+    printf("Error %d", status);
+    return NULL; // ADD ERROR THROW
+  }
+
+  status = init_rpi_hw_obj(env, &rpi_hw_obj);
+
+  if (status != napi_ok) {
+    return NULL; // ADD ERROR THROW
+  }
+
+  status = init_channel_arr(env, &channel_arr);
+
+  if (status != napi_ok) {
+    return NULL; // ADD ERROR THROW
+  }
 
   return NULL;
 }
@@ -210,13 +232,38 @@ napi_property_descriptor make_fini_prop() {
 }
 
 napi_value run_fini_func(napi_env env, napi_callback_info info) {
-  if (ws2811.device != NULL) {
+  napi_status status;
+  int         channel_id;
+
+  if (ws2811.device != NULL) { // THROW ERROR INSTEAD
     ws2811_fini(&ws2811);
   }
 
-  free_rpi_hw_obj(env);
-  free_channel_arr(env);
-  free_driver_obj(env);
+  status = free_rpi_hw_obj(env);
+
+  if (status != napi_ok) {
+    return NULL; // ADD THROW ERROR
+  }
+
+  status = free_channel_arr(env);
+
+  if (status != napi_ok) {
+    return NULL; // ADD THROW ERROR
+  }
+
+  status = free_driver_obj(env);
+
+  if (status != napi_ok) {
+    return NULL; // ADD THROW ERROR
+  }
+
+  for (channel_id = 0; channel_id < RPI_PWM_CHANNELS; channel_id++) {
+    status = free_channel_leds_arr(env, channel_id);
+
+    if (status != napi_ok) {
+      return NULL; // ADD THROW ERROR
+    }
+  }
 
   return NULL;
 }
@@ -228,25 +275,24 @@ napi_property_descriptor make_render_prop() {
 }
 
 napi_value run_render_func(napi_env env, napi_callback_info info) {
-  int status;
-  int i;
+  int status, channel_id;
 
   if (ws2811.device == NULL) {
-    return NULL;
+    return NULL; // THROW ERROR INSTEAD
   }
 
-  for (i = 0; i < RPI_PWM_CHANNELS; i++) {
-    status = push_channel_leds_arr(env, i);
+  for (channel_id = 0; channel_id < RPI_PWM_CHANNELS; channel_id++) {
+    status = push_channel_leds_arr(env, channel_id);
 
     if (status != napi_ok) {
-      return NULL;
+      return NULL; // ADD THROW ERROR
     }
   }
 
   status = ws2811_render(&ws2811);
 
   if (status != WS2811_SUCCESS) {
-    napi_throw_error(env, NULL, ws2811_get_return_t_str(status));
+    napi_throw_error(env, NULL, ws2811_get_return_t_str(status)); // UPDATE THROW ERROR
     return NULL;
   }
 
@@ -262,14 +308,14 @@ napi_property_descriptor make_wait_prop() {
 napi_value run_wait_func(napi_env env, napi_callback_info info) {
   ws2811_return_t status;
 
-  if (ws2811.device == NULL) {
+  if (ws2811.device == NULL) { // THROW ERROR INSTEAD
     return NULL;
   }
 
   status = ws2811_wait(&ws2811);
 
   if (status != WS2811_SUCCESS) {
-    napi_throw_error(env, NULL, ws2811_get_return_t_str(status));
+    napi_throw_error(env, NULL, ws2811_get_return_t_str(status)); // UPDATE THROW ERROR
     return NULL;
   }
 
@@ -286,14 +332,14 @@ napi_value run_set_custom_gamma_factor_func(napi_env env, napi_callback_info inf
   int    status;
   double value;
 
-  if (ws2811.device == NULL) {
+  if (ws2811.device == NULL) { // THROW ERROR INSTEAD
     return NULL;
   }
 
-  status = parse_value_double(env, info, &value, NULL);
+  status = parse_arg_value_double(env, info, &value, NULL);
 
   if (status != napi_ok) {
-    throw_invalid_argument_error(env);
+    throw_invalid_argument_error(env); // UPDATE THROW ERROR
     return NULL;
   }
 
