@@ -10,6 +10,11 @@
 #include <string.h>
 #include <ws2811.h>
 
+typedef struct {
+  char *name;
+  int   channel_arr_index;
+} prop_data;
+
 #include "driver.h"
 
 ws2811_t ws2811;
@@ -24,7 +29,7 @@ napi_status parse_arg_value_uint32(napi_env env, napi_callback_info info, uint32
 napi_status parse_arg_value_int32(napi_env env, napi_callback_info info, int *result, void **data);
 napi_status parse_arg_value_double(napi_env env, napi_callback_info info, double *result, void **data);
 
-napi_status throw_invalid_argument_error(napi_env env);
+napi_status throw_invalid_arg_error(napi_env env);
 
 napi_status free_reference(napi_env env, napi_ref ref);
 

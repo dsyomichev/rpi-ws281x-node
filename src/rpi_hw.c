@@ -44,14 +44,25 @@ napi_status free_rpi_hw_obj(napi_env env) {
 }
 
 napi_property_descriptor make_rpi_hw_type_prop(napi_env env) {
-  static char name[] = "type";
+  static char      name[] = "type";
+  static prop_data data;
 
-  return make_accessor_prop(name, &get_rpi_hw_type_val, NULL, NULL);
+  data.name = name;
+  data.channel_arr_index = -1;
+
+  return make_accessor_prop(name, &get_rpi_hw_type_val, NULL, &data);
 }
 
 napi_value get_rpi_hw_type_val(napi_env env, napi_callback_info info) {
   napi_value  target;
   napi_status status;
+  prop_data  *data;
+
+  status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
+
+  if (status != napi_ok) {
+    return NULL; // ADD THROW ERROR
+  }
 
   if (ws2811.rpi_hw == NULL) {
     return NULL;
@@ -67,14 +78,25 @@ napi_value get_rpi_hw_type_val(napi_env env, napi_callback_info info) {
 }
 
 napi_property_descriptor make_rpi_hw_hwver_prop(napi_env env) {
-  static char name[] = "hwver";
+  static char      name[] = "hwver";
+  static prop_data data;
 
-  return make_accessor_prop(name, &get_rpi_hw_hwver_val, NULL, NULL);
+  data.name = name;
+  data.channel_arr_index = -1;
+
+  return make_accessor_prop(name, &get_rpi_hw_hwver_val, NULL, &data);
 }
 
 napi_value get_rpi_hw_hwver_val(napi_env env, napi_callback_info info) {
   napi_value  target;
   napi_status status;
+  prop_data  *data;
+
+  status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
+
+  if (status != napi_ok) {
+    return NULL; // ADD THROW ERROR
+  }
 
   if (ws2811.rpi_hw == NULL) {
     return NULL;
@@ -90,14 +112,25 @@ napi_value get_rpi_hw_hwver_val(napi_env env, napi_callback_info info) {
 }
 
 napi_property_descriptor make_rpi_hw_periph_base_prop(napi_env env) {
-  static char name[] = "periph_base";
+  static char      name[] = "periph_base";
+  static prop_data data;
 
-  return make_accessor_prop(name, &get_rpi_hw_periph_base_val, NULL, NULL);
+  data.name = name;
+  data.channel_arr_index = -1;
+
+  return make_accessor_prop(name, &get_rpi_hw_periph_base_val, NULL, &data);
 }
 
 napi_value get_rpi_hw_periph_base_val(napi_env env, napi_callback_info info) {
   napi_value  target;
   napi_status status;
+  prop_data  *data;
+
+  status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
+
+  if (status != napi_ok) {
+    return NULL; // ADD THROW ERROR
+  }
 
   if (ws2811.rpi_hw == NULL) {
     return NULL;
@@ -113,14 +146,25 @@ napi_value get_rpi_hw_periph_base_val(napi_env env, napi_callback_info info) {
 }
 
 napi_property_descriptor make_rpi_hw_videocore_base_prop(napi_env env) {
-  static char name[] = "videocore_base";
+  static char      name[] = "videocore_base";
+  static prop_data data;
 
-  return make_accessor_prop(name, &get_rpi_hw_videocore_base_val, NULL, NULL);
+  data.name = name;
+  data.channel_arr_index = -1;
+
+  return make_accessor_prop(name, &get_rpi_hw_videocore_base_val, NULL, &data);
 }
 
 napi_value get_rpi_hw_videocore_base_val(napi_env env, napi_callback_info info) {
   napi_value  target;
   napi_status status;
+  prop_data  *data;
+
+  status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
+
+  if (status != napi_ok) {
+    return NULL; // ADD THROW ERROR
+  }
 
   if (ws2811.rpi_hw == NULL) {
     return NULL;
@@ -136,15 +180,26 @@ napi_value get_rpi_hw_videocore_base_val(napi_env env, napi_callback_info info) 
 }
 
 napi_property_descriptor make_rpi_hw_desc_prop(napi_env env) {
-  static char name[] = "desc";
+  static char      name[] = "desc";
+  static prop_data data;
 
-  return make_accessor_prop(name, &get_rpi_hw_desc_val, NULL, NULL);
+  data.name = name;
+  data.channel_arr_index = -1;
+
+  return make_accessor_prop(name, &get_rpi_hw_desc_val, NULL, &data);
 }
 
 napi_value get_rpi_hw_desc_val(napi_env env, napi_callback_info info) {
   napi_value  target;
   napi_status status;
   size_t      length;
+  prop_data  *data;
+
+  status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
+
+  if (status != napi_ok) {
+    return NULL; // ADD THROW ERROR
+  }
 
   if (ws2811.rpi_hw == NULL || ws2811.rpi_hw->desc == NULL) {
     return NULL;

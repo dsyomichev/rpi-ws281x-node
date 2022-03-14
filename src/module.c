@@ -149,7 +149,7 @@ napi_status parse_arg_value_double(napi_env env, napi_callback_info info, double
   return status;
 }
 
-napi_status throw_invalid_argument_error(napi_env env) { // UPDATE THIS
+napi_status throw_invalid_arg_error(napi_env env) { // UPDATE THIS
   static const char message[] = "Invalid argument.";
   return napi_throw_error(env, NULL, message);
 }
