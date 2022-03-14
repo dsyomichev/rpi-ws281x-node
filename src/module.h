@@ -1,142 +1,31 @@
-#ifndef MODULE_H
-#define MODULE_H
+#ifndef _MODULE_H_
+#define _MODULE_H_
 
-extern "C" {
-#include <jgarff/rpi_ws281x/pwm.h>
-#include <jgarff/rpi_ws281x/ws2811.h>
-};
+#define NAPI_VERSION 6
 
-#include <napi.h>
+#include <math.h>
+#include <node_api.h>
+#include <pwm.h>
+#include <stdio.h>
+#include <string.h>
+#include <ws2811.h>
 
-#include "property/channel.h"
-#include "property/rpi_hw.h"
+#include "driver.h"
 
-/**
- * The controller that will be used to manipulate the light strip.
- **/
-extern ws2811_t controller;
+ws2811_t ws2811;
 
-/**
- * Create a new driver object.
- **/
-Napi::Object init_driver(Napi::Env env, Napi::Object exports);
+napi_value make_module(napi_env env, napi_value exports);
 
-/** Descriptors **/
+napi_property_descriptor make_accessor_prop(const char *name, napi_callback get, napi_callback set, void *data);
+napi_property_descriptor make_method_prop(const char *name, napi_callback method, void *data);
+napi_property_descriptor make_value_prop(const char *name, napi_value value, void *data);
 
-/**
- * Create an accessor descriptor to the 'render_wait_time' property.
- **/
-extern Napi::PropertyDescriptor render_wait_time_desc(void *data);
+napi_status parse_value_uint32(napi_env env, napi_callback_info info, uint32_t *result, void **data);
+napi_status parse_value_int32(napi_env env, napi_callback_info info, int *result, void **data);
+napi_status parse_value_double(napi_env env, napi_callback_info info, double *result, void **data);
 
-/**
- * Create an accessor descriptor to the 'rpi_hw' property.
- **/
-extern Napi::PropertyDescriptor rpi_hw_desc(void *data);
+napi_status throw_invalid_argument_error(napi_env env);
 
-/**
- * Create an accessor descriptor to the 'freq_desc' property.
- **/
-extern Napi::PropertyDescriptor freq_desc(void *data);
-
-/**
- * Create an accessor descriptor to the 'dmanum' property.
- **/
-extern Napi::PropertyDescriptor dmanum_desc(void *data);
-
-/**
- * Create an accessor descriptor to the 'channel' property.
- **/
-extern Napi::PropertyDescriptor channel_desc(void *data);
-
-/**
- * Create a function descriptor to the 'init' function.
- **/
-extern Napi::PropertyDescriptor init_desc(void *data);
-
-/**
- * Create a function descriptor to the 'fini' function.
- **/
-extern Napi::PropertyDescriptor fini_desc(void *data);
-
-/**
- * Create a function descriptor to the 'render' function.
- **/
-extern Napi::PropertyDescriptor render_desc(void *data);
-
-/**
- * Create a function descriptor to the 'wait' function.
- **/
-extern Napi::PropertyDescriptor wait_desc(void *data);
-
-/**
- * Create a function descriptor to the 'set_custom_gamma_factor' function.
- **/
-extern Napi::PropertyDescriptor set_custom_gamma_factor_desc(void *data);
-
-/** Functions **/
-
-/**
- * Initialize the driver. Wrapper for the 'init' function.
- **/
-void init_func(const Napi::CallbackInfo &info);
-
-/**
- * Finalize the driver. Wrapper for the 'fini' function.
- **/
-void fini_func(const Napi::CallbackInfo &info);
-
-/**
- * Render the strip. Wrapper for the 'render' function.
- **/
-void render_func(const Napi::CallbackInfo &info);
-
-/**
- * Wait for the DMA completion. Wrapper for the 'wait' function.
- **/
-void wait_func(const Napi::CallbackInfo &info);
-
-/**
- * Set a custom gamma factor. Wrapper for the 'set_custom_gamma_factor' function.
- **/
-void set_custom_gamma_factor_func(const Napi::CallbackInfo &info);
-
-/** Getters **/
-
-/**
- * Get a value for the 'render_wait_time' property.
- **/
-Napi::Value render_wait_time_get(const Napi::CallbackInfo &info);
-
-/**
- * Get a value for the 'rpi_hw' property.
- **/
-Napi::Value rpi_hw_get(const Napi::CallbackInfo &info);
-
-/**
- * Get a value for the 'freq' property.
- **/
-Napi::Value freq_get(const Napi::CallbackInfo &info);
-
-/**
- * Get a value for the 'dmanum' property.
- **/
-Napi::Value dmanum_get(const Napi::CallbackInfo &info);
-
-/**
- * Get a value for the 'channel' property.
- **/
-Napi::Value channel_get(const Napi::CallbackInfo &info);
-
-/** Setters **/
-
-/**
- * Set a value for the 'freq' property.
- **/
-void freq_set(const Napi::CallbackInfo &info);
-
-/**
- * Set a value for the 'dmanum' property.
- **/
-void dmanum_set(const Napi::CallbackInfo &info);
+napi_status free_reference(napi_env env, napi_ref ref);
 
 #endif

@@ -1,19 +1,18 @@
 {
   "name": "rpi-ws281x-node",
   "version": "1.0.0",
-  "description": "NAPI wrapper around the rpi_ws281x library.",
+  "description": "Node API wrapper for the rpi_ws281x library.",
   "license": "MIT",
-  "main": "src/loader/rpi_ws281x_node.js",
+  "main": "dist/index.js",
   "gypfile": true,
   "engines": {
-    "node": ">=12"
+    "node": ">=10.20.0"
   },
   "declaration": true,
-  "types": "src/loader/rpi_ws281x_node.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "node-gyp build",
-    "test": "mocha test/**/*.spec.js",
-    "prepare": "npm test"
+    "test": "mocha test/**/*.spec.js"
   },
   "homepage": "https://github.com/dsyomichev/rpi-ws281x-node#readme",
   "bugs": {
@@ -25,7 +24,8 @@
   },
   "author": {
     "name": "Daniel Syomichev",
-    "email": "dsyomichev@gmail.com"
+    "email": "dsyomichev@gmail.com",
+    "url": "https://github.com/dsyomichev"
   },
   "files": [
     "binding.gyp",
@@ -33,10 +33,6 @@
     "lib/**/*",
     "src/**/*"
   ],
-  "dependencies": {
-    "bindings": "^1.5.0",
-    "node-addon-api": "^4.3.0"
-  },
   "devDependencies": {
     "chai": "^4.3.6",
     "eslint": "^8.10.0",
@@ -51,6 +47,7 @@
   },
   "keywords": [
     "napi",
+    "native",
     "wrapper",
     "raspberry pi",
     "neopixel",

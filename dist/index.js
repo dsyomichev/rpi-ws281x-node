@@ -1,6 +1,1 @@
-const os = require('os');
-const fallback = require('./fallback');
-
-const unsupported = os.platform() !== 'linux';
-
-module.exports = unsupported ? fallback : require('bindings')('rpi_ws281x_node');
+module.exports = process.platform === 'linux' ? require('../build/Release/rpi_ws281x_node.node') : undefined;

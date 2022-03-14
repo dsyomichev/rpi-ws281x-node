@@ -3,9 +3,12 @@
   "plugins": ["prettier", "mocha", "chai-friendly"],
   "extends": [
     "airbnb-base",
-    "prettier",
     "plugin:mocha/recommended",
     "plugin:chai-friendly/recommended",
+    "prettier",
     "plugin:prettier/recommended"
-  ]
+  ],
+  "rules": {
+    "import/no-unresolved": "off"
+  }
 }

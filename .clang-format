@@ -9,5 +9,3 @@ AlignOperands: 'true'
 AlignTrailingComments: 'true'
 ColumnLimit: '120'
 AllowShortFunctionsOnASingleLine: 'false'
-
-...

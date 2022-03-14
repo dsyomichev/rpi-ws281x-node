@@ -1,6 +1,6 @@
 # rpi-ws281x-node
 
-NAPI wrapper around the [rpi_ws281x](https://github.com/jgarff/rpi_ws281x) library.
+`node-addon-api` module around the [`rpi_ws281x`](https://github.com/jgarff/rpi_ws281x) library.
 
 ## Installing
 
@@ -12,13 +12,15 @@ npm install rpi-ws281x-node
 
 and then importing it with
 
+```javascript
+const driver = require('rpi-ws281x-node');
+```
+
 ```typescript
 import driver from 'rpi-ws281x-node';
 ```
 
-```javascript
-const driver = require('rpi-ws281x-node');
-```
+Type declarations for the module are provided.
 
 ## Notes
 
@@ -28,7 +30,9 @@ const driver = require('rpi-ws281x-node');
 
 ## Usage
 
-This library wraps the `rpi_ws281x::ws2811_t` struct one for one, with the exception of being able to modify individual LEDs.
+This library attempts to modularize the `rpi_ws281x::ws2811_t` struct. The object is exported nearly one for one as a NodeJS value. For more information on configuring the driver, see [this page](https://github.com/jgarff/rpi_ws281x#usage).
+
+Private driver information is also ignored for the purposes of this library.
 
 ```javascript
 driver.freq = 80000;
@@ -41,7 +45,8 @@ driver.channel[0].brightness = 255;
 
 driver.init();
 
-driver.channel[0].leds = new Uint32Array().fill(0xffffff);
+driver.channel[0].leds = new Uint32Array(driver.channel[0].count).fill(0xffffff);
+driver.channel[0].leds[0] = 0x000000;
 driver.render();
 ```
 

@@ -1,48 +1,46 @@
 {
-    "conditions": [
+    'conditions': [
         [
-            "OS==\"linux\"",
+            'OS=="linux"',
             {
-                "targets": [
+                'targets': [
                     {
-                        "target_name": "rpi_ws281x_node",
-                        "cflags!": ["-fno-exceptions"],
-                        "cflags_cc!": ["-fno-exceptions"],
-                        "sources": [
-                            "./src/module.cc",
-                            "./src/property/channel.cc",
-                            "./src/property/rpi_hw.cc"
+                        'target_name': 'rpi_ws281x_node',
+                        'sources': [
+                            './src/module.c',
+                            './src/driver.c',
+                            './src/rpi_hw.c',
+                            './src/channel.c',
                         ],
-                        "dependencies": ["rpi_ws281x"],
-                        "include_dirs": ["<!(node -p \"require('node-addon-api').include_dir\")", "./lib"],
-                        "defines": ["NAPI_DISABLE_CPP_EXCEPTIONS"]
+                        'dependencies': ['rpi_ws281x'],
+                        'include_dirs': ['./lib/jgarff/rpi_ws281x'],
                     },
                     {
-                        "target_name": "rpi_ws281x",
-                        "type": "static_library",
-                        "sources": [
-                            "./lib/jgarff/rpi_ws281x/ws2811.c",
-                            "./lib/jgarff/rpi_ws281x/pwm.c",
-                            "./lib/jgarff/rpi_ws281x/dma.c",
-                            "./lib/jgarff/rpi_ws281x/mailbox.c",
-                            "./lib/jgarff/rpi_ws281x/rpihw.c",
-                            "./lib/jgarff/rpi_ws281x/pcm.c"
+                        'target_name': 'rpi_ws281x',
+                        'type': 'static_library',
+                        'sources': [
+                            './lib/jgarff/rpi_ws281x/ws2811.c',
+                            './lib/jgarff/rpi_ws281x/pwm.c',
+                            './lib/jgarff/rpi_ws281x/dma.c',
+                            './lib/jgarff/rpi_ws281x/mailbox.c',
+                            './lib/jgarff/rpi_ws281x/rpihw.c',
+                            './lib/jgarff/rpi_ws281x/pcm.c'
                         ]
                     }
                 ]
             },
             {
-                "targets": [
+                'targets': [
                     {
-                        "target_name": "rpi_ws281x_node",
-                        "type": "none",
-                        "actions": [
+                        'target_name': 'rpi_ws281x_node',
+                        'type': 'none',
+                        'actions': [
                             {
-                                "action_name": "unsupported_platform",
-                                "inputs": [],
-                                "outputs": ["fallback"],
-                                "action": ["true"],
-                                "message": "Package is being installed on an unsupported platform. A unbound interface will be provided."
+                                'action_name': 'unsupported_platform',
+                                'inputs': [],
+                                'outputs': ['no_build'],
+                                'action': ['true'],
+                                'message': 'Package is being installed on an unsupported platform.'
                             }
                         ]
                     }
