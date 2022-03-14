@@ -151,7 +151,7 @@ napi_value get_rpi_hw_desc_val(napi_env env, napi_callback_info info) {
   }
 
   length = strlen(ws2811.rpi_hw->desc);
-  status = napi_create_string_utf16(env, (char16_t *)ws2811.rpi_hw->desc, length, &target);
+  status = napi_create_string_utf8(env, ws2811.rpi_hw->desc, length, &target);
 
   if (status != napi_ok) {
     return NULL; // ADD THROW ERROR

@@ -30,7 +30,7 @@ const GAMMA_FACTOR = 50;
 const MODIFIED_GAMMA = new Uint8Array(256);
 make_gamma_table(MODIFIED_GAMMA, GAMMA_FACTOR);
 
-if (!process.getuid || process.getuid() !== 0) throw new Error('Tests must run as root.');
+if (!process.getuid || process.getuid() !== 0) throw new Error('Tests require root privileges.');
 
 const { expect } = require('chai');
 const driver = require('../dist/index');
