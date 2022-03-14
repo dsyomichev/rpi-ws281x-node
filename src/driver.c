@@ -408,7 +408,10 @@ napi_value run_render_func(napi_env env, napi_callback_info info) {
   for (channel_arr_index = 0; channel_arr_index < RPI_PWM_CHANNELS; channel_arr_index++) {
     status = push_channel_leds_arr(env, channel_arr_index);
 
-    if (status != napi_ok) {
+    if (status == napi_invalid_arg) {
+      throw_invalid_arg_error(env);
+      return NULL;
+    } else if (status != napi_ok) {
       throw_generic_error(env);
       return NULL;
     }

@@ -6,8 +6,7 @@
 #define CHANNEL_PROPS 11
 #define GAMMA_TABLE_SIZE 256
 
-int      channel_obj_id[RPI_PWM_CHANNELS];
-napi_ref channel_arr_ref, channel_leds_arr_ref[RPI_PWM_CHANNELS];
+napi_ref channel_arr_ref, channel_obj_ref[RPI_PWM_CHANNELS];
 
 napi_status init_channel_arr(napi_env env, napi_value *target);
 napi_status free_channel_arr(napi_env env);
@@ -32,7 +31,7 @@ napi_property_descriptor make_channel_strip_type_prop(int channel_arr_index);
 napi_value               get_channel_strip_type_val(napi_env env, napi_callback_info info);
 napi_value               set_channel_strip_type_val(napi_env env, napi_callback_info info);
 
-napi_property_descriptor make_channel_leds_prop(napi_env env, int channel_arr_index);
+napi_property_descriptor make_channel_leds_prop(napi_env env, int channel_arr_index, napi_value value);
 
 napi_property_descriptor make_channel_brightness_prop(int channel_arr_index);
 napi_value               get_channel_brightness_val(napi_env env, napi_callback_info info);

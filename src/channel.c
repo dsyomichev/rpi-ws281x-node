@@ -1,7 +1,6 @@
 #include "channel.h"
 
-int      channel_obj_id[RPI_PWM_CHANNELS];
-napi_ref channel_arr_ref, channel_leds_arr_ref[RPI_PWM_CHANNELS];
+napi_ref channel_arr_ref, channel_obj_ref[RPI_PWM_CHANNELS];
 
 napi_status init_channel_arr(napi_env env, napi_value *target) {
   napi_status status;
@@ -17,24 +16,32 @@ napi_status init_channel_arr(napi_env env, napi_value *target) {
     napi_value               channel, leds;
     napi_property_descriptor prop[CHANNEL_PROPS];
 
-    channel_obj_id[channel_arr_index] = channel_arr_index;
-    status = init_channel_leds_arr(env, &leds, channel_arr_index);
-
-    if (status != napi_ok) {
-      return status;
-    }
-
     status = napi_create_object(env, &channel);
 
     if (status != napi_ok) {
       return status;
     }
 
+    if (ws2811.channel[channel_arr_index].leds != NULL) {
+
+      status = init_channel_leds_arr(env, &leds, channel_arr_index);
+
+      if (status != napi_ok) {
+        return status;
+      }
+    } else {
+      status = napi_get_undefined(env, &leds);
+
+      if (status != napi_ok) {
+        return status;
+      }
+    }
+
     prop[0] = make_channel_gpionum_prop(channel_arr_index);
     prop[1] = make_channel_invert_prop(channel_arr_index);
     prop[2] = make_channel_count_prop(channel_arr_index);
     prop[3] = make_channel_strip_type_prop(channel_arr_index);
-    prop[4] = make_channel_leds_prop(env, channel_arr_index);
+    prop[4] = make_channel_leds_prop(env, channel_arr_index, leds);
     prop[5] = make_channel_brightness_prop(channel_arr_index);
     prop[6] = make_channel_wshift_prop(channel_arr_index);
     prop[7] = make_channel_rshift_prop(channel_arr_index);
@@ -49,6 +56,12 @@ napi_status init_channel_arr(napi_env env, napi_value *target) {
     }
 
     status = napi_set_element(env, *target, channel_arr_index, channel);
+
+    if (status != napi_ok) {
+      return status;
+    }
+
+    status = napi_create_reference(env, channel, 1, &channel_obj_ref[channel_arr_index]);
 
     if (status != napi_ok) {
       return status;
@@ -96,12 +109,6 @@ napi_status init_channel_leds_arr(napi_env env, napi_value *target, int channel_
     if (status != napi_ok) {
       return status;
     }
-
-    status = napi_create_reference(env, *target, 1, &channel_leds_arr_ref[channel_arr_index]);
-
-    if (status != napi_ok) {
-      return status;
-    }
   }
 
   return status;
@@ -110,34 +117,54 @@ napi_status init_channel_leds_arr(napi_env env, napi_value *target, int channel_
 napi_status free_channel_leds_arr(napi_env env, int channel_arr_index) {
   napi_status status;
 
-  status = free_reference(env, channel_leds_arr_ref[channel_arr_index]);
+  status = free_reference(env, channel_obj_ref[channel_arr_index]);
 
   return status;
 }
 
 napi_status push_channel_leds_arr(napi_env env, int channel_arr_index) {
-  napi_value  buffer;
-  uint32_t   *buffer_data;
-  napi_status status;
-  int         led_index;
+  napi_value           channel_obj, buffer, name;
+  uint32_t            *buffer_data;
+  napi_status          status;
+  int                  led_index;
+  size_t               count;
+  napi_typedarray_type arr_type;
+  char                 prop_name[] = "leds";
+  ws2811_channel_t    *channel = &ws2811.channel[channel_arr_index];
 
-  status = napi_get_reference_value(env, channel_leds_arr_ref[channel_arr_index], &buffer);
-
-  if (status != napi_ok) {
-    return status;
-  }
-
-  // ADD TYPE CHECK FOR PROP
-
-  status = napi_get_typedarray_info(env, buffer, NULL, NULL, (void **)&buffer_data, NULL, NULL);
+  status = napi_get_reference_value(env, channel_obj_ref[channel_arr_index], &channel_obj);
 
   if (status != napi_ok) {
     return status;
   }
 
-  // ADD SIZE CHECK AND RESULT
+  status = napi_create_string_utf8(env, prop_name, strlen(prop_name), &name);
 
-  for (led_index = 0; led_index < ws2811.channel[channel_arr_index].count; led_index++) {
+  if (status != napi_ok) {
+    return status;
+  }
+
+  status = napi_get_property(env, channel_obj, name, &buffer);
+
+  if (status != napi_ok) {
+    return status;
+  }
+
+  status = napi_get_typedarray_info(env, buffer, &arr_type, &count, (void **)&buffer_data, NULL, NULL);
+
+  if (status != napi_ok) {
+    return status;
+  }
+
+  if (arr_type != napi_uint32_array) {
+    return napi_invalid_arg;
+  }
+
+  if ((int)count != channel->count) {
+    return napi_invalid_arg;
+  }
+
+  for (led_index = 0; led_index < channel->count; led_index++) {
     ws2811.channel[channel_arr_index].leds[led_index] = buffer_data[led_index];
   }
 
@@ -344,21 +371,13 @@ napi_value set_channel_strip_type_val(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
-napi_property_descriptor make_channel_leds_prop(napi_env env, int channel_arr_index) {
+napi_property_descriptor make_channel_leds_prop(napi_env env, int channel_arr_index, napi_value value) {
   static prop_data channel_leds_prop_data[RPI_PWM_CHANNELS];
   static char      name[] = "leds";
-  napi_value       value;
-  napi_status      status;
   prop_data       *data = &channel_leds_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
-
-  status = napi_get_reference_value(env, channel_leds_arr_ref[channel_arr_index], &value);
-
-  if (status != napi_ok) {
-    napi_get_undefined(env, &value);
-  }
 
   return make_value_prop(name, value, (void *)data);
 }
