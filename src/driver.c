@@ -333,6 +333,7 @@ napi_value run_fini_func(napi_env env, napi_callback_info info) {
   napi_status status;
   int         channel_arr_index;
   prop_data  *data;
+  napi_value  channel_arr;
 
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
@@ -343,8 +344,13 @@ napi_value run_fini_func(napi_env env, napi_callback_info info) {
 
   if (ws2811.device == NULL) {
     throw_init_error(env);
-    ws2811_fini(&ws2811);
+    return NULL;
   }
+
+  ws2811_fini(&ws2811);
+
+  ws2811.device = NULL;
+  ws2811.rpi_hw = NULL;
 
   status = free_rpi_hw_obj(env);
 
@@ -360,13 +366,6 @@ napi_value run_fini_func(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  status = free_driver_obj(env);
-
-  if (status != napi_ok) {
-    throw_generic_error(env);
-    return NULL;
-  }
-
   for (channel_arr_index = 0; channel_arr_index < RPI_PWM_CHANNELS; channel_arr_index++) {
     status = free_channel_leds_arr(env, channel_arr_index);
 
@@ -374,6 +373,13 @@ napi_value run_fini_func(napi_env env, napi_callback_info info) {
       throw_generic_error(env);
       return NULL;
     }
+  }
+
+  status = init_channel_arr(env, &channel_arr);
+
+  if (status != napi_ok) {
+    throw_generic_error(env);
+    return NULL;
   }
 
   return NULL;

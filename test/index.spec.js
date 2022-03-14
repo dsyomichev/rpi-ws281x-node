@@ -30,10 +30,19 @@ const GAMMA_FACTOR = 50;
 const MODIFIED_GAMMA = new Uint8Array(256);
 make_gamma_table(MODIFIED_GAMMA, GAMMA_FACTOR);
 
-if (!process.getuid || process.getuid() !== 0) throw new Error('Tests require root privileges.');
-
 const { expect } = require('chai');
 const driver = require('../dist/index');
+
+const reset = () => {
+  driver.freq = FREQ;
+  driver.dmanum = DMANUM;
+
+  driver.channel[0].gpionum = GPIONUM_1;
+  driver.channel[0].invert = INVERT;
+  driver.channel[0].count = COUNT;
+  driver.channel[0].strip_type = STRIP_TYPE;
+  driver.channel[0].brightness = BRIGHNESS;
+};
 
 describe('rpi_ws281x_node', function () {
   describe('render_wait_time', function () {
@@ -56,6 +65,12 @@ describe('rpi_ws281x_node', function () {
       driver.freq = FREQ;
       expect(driver.freq).to.equal(FREQ);
     });
+
+    it('should throw an error when an invalid value is provided', function () {
+      expect(() => {
+        driver.freq = -1;
+      }).to.throw;
+    });
   });
 
   describe('dmanum', function () {
@@ -68,6 +83,12 @@ describe('rpi_ws281x_node', function () {
     it('should create a valid setter for the "dmanum" property', function () {
       driver.dmanum = DMANUM;
       expect(driver.dmanum).to.equal(DMANUM);
+    });
+
+    it('should throw an error when an invalid value is provided', function () {
+      expect(() => {
+        driver.freq = 1.23;
+      }).to.throw;
     });
   });
 
@@ -91,6 +112,12 @@ describe('rpi_ws281x_node', function () {
             driver.channel[k].gpionum = k === 0 ? GPIONUM_1 : GPIONUM_2;
             expect(driver.channel[k].gpionum).to.equal(k === 0 ? GPIONUM_1 : GPIONUM_2);
           });
+
+          it('should throw an error when an invalid value is provided', function () {
+            expect(() => {
+              driver.channel[k].gpionum = 1.23;
+            }).to.throw;
+          });
         });
 
         describe('invert', function () {
@@ -103,6 +130,12 @@ describe('rpi_ws281x_node', function () {
           it('should create a valid setter for the "invert" property', function () {
             driver.channel[k].invert = INVERT;
             expect(driver.channel[k].invert).to.equal(INVERT);
+          });
+
+          it('should throw an error when an invalid value is provided', function () {
+            expect(() => {
+              driver.channel[k].invert = 1.23;
+            }).to.throw;
           });
         });
 
@@ -117,6 +150,12 @@ describe('rpi_ws281x_node', function () {
             driver.channel[k].count = COUNT;
             expect(driver.channel[k].count).to.equal(COUNT);
           });
+
+          it('should throw an error when an invalid value is provided', function () {
+            expect(() => {
+              driver.channel[k].count = Infinity;
+            }).to.throw;
+          });
         });
 
         describe('strip_type', function () {
@@ -130,15 +169,17 @@ describe('rpi_ws281x_node', function () {
             driver.channel[k].strip_type = STRIP_TYPE;
             expect(driver.channel[k].strip_type).to.equal(STRIP_TYPE);
           });
+
+          it('should throw an error when an invalid value is provided', function () {
+            expect(() => {
+              driver.channel[k].gpionum = 5.54;
+            }).to.throw;
+          });
         });
 
         describe('leds', function () {
-          it('should create a valid getter for the "leds" property', function () {
+          it('should return undefined before initialization', function () {
             expect(driver.channel[k]).to.have.property('leds');
-            expect(driver.channel[k].leds).to.be.undefined;
-          });
-
-          it('should create a valid setter for the "leds" property', function () {
             expect(driver.channel[k].leds).to.be.undefined;
           });
         });
@@ -153,6 +194,16 @@ describe('rpi_ws281x_node', function () {
           it('should create a valid setter for the "brightness" property', function () {
             driver.channel[k].brightness = BRIGHNESS;
             expect(driver.channel[k].brightness).to.equal(BRIGHNESS);
+          });
+
+          it('should throw an error when an invalid value is provided', function () {
+            expect(() => {
+              driver.channel[k].brightness = -1;
+            }).to.throw;
+
+            expect(() => {
+              driver.channel[k].brightness = 256;
+            }).to.throw;
           });
         });
 
@@ -189,7 +240,7 @@ describe('rpi_ws281x_node', function () {
         });
 
         describe('gamma', function () {
-          it('should create a valid getter for the "gamma" property', function () {
+          it('should return undefined before initialization', function () {
             expect(driver.channel[k]).to.have.property('gamma');
             expect(driver.channel[k].gamma).to.be.undefined;
           });
@@ -200,23 +251,11 @@ describe('rpi_ws281x_node', function () {
 
   describe('init()', function () {
     before(function () {
-      driver.freq = FREQ;
-      driver.dmanum = DMANUM;
+      reset();
+    });
 
-      driver.channel[0].gpionum = GPIONUM_1;
-      driver.channel[1].gpionum = GPIONUM_2;
-
-      driver.channel[0].invert = INVERT;
-      driver.channel[1].invert = INVERT;
-
-      driver.channel[0].count = COUNT;
-      driver.channel[1].count = COUNT;
-
-      driver.channel[0].strip_type = STRIP_TYPE;
-      driver.channel[1].strip_type = STRIP_TYPE;
-
-      driver.channel[0].brightness = BRIGHNESS;
-      driver.channel[1].brightness = BRIGHNESS;
+    after(function () {
+      driver.fini();
     });
 
     it('should execute without throwing', function () {
@@ -286,18 +325,71 @@ describe('rpi_ws281x_node', function () {
   });
 
   describe('render()', function () {
+    before(function () {
+      reset();
+    });
+
+    after(function () {
+      driver.fini();
+    });
+
+    it('should throw an error before initialization', function () {
+      expect(() => driver.render()).to.throw;
+
+      driver.init();
+    });
+
     it('should execute without throwing', function () {
       expect(driver.render()).to.not.throw;
+    });
+
+    it('should throw an error when trying to render an invalid buffer', function () {
+      driver.leds = '';
+      expect(driver.render()).to.throw;
+
+      driver.leds = new Uint16Array(driver.count);
+      expect(driver.render()).to.throw;
+
+      driver.leds = new Uint32Array(driver.count + 1);
+      expect(driver.render()).to.throw;
     });
   });
 
   describe('wait()', function () {
+    before(function () {
+      reset();
+    });
+
+    after(function () {
+      driver.fini();
+    });
+
+    it('should throw an error before initialization', function () {
+      expect(() => driver.wait()).to.throw;
+
+      driver.init();
+    });
+
     it('should execute without throwing', function () {
-      expect(driver.render()).to.not.throw;
+      expect(driver.wait()).to.not.throw;
     });
   });
 
   describe('set_custom_gamma_factor()', function () {
+    before(function () {
+      reset();
+    });
+
+    after(function () {
+      driver.fini();
+    });
+
+    it('should throw an error before initialization', function () {
+      expect(() => driver.set_custom_gamma_factor(GAMMA_FACTOR)).to.throw;
+
+      driver.init();
+    });
+
     it('should execute without throwing', function () {
       expect(driver.set_custom_gamma_factor(GAMMA_FACTOR)).to.not.throw;
     });
@@ -312,6 +404,16 @@ describe('rpi_ws281x_node', function () {
   });
 
   describe('fini()', function () {
+    before(function () {
+      reset();
+    });
+
+    it('should throw an error before initialization', function () {
+      expect(() => driver.fini(GAMMA_FACTOR)).to.throw;
+
+      driver.init();
+    });
+
     it('should execute without throwing', function () {
       expect(driver.fini()).to.not.throw;
     });

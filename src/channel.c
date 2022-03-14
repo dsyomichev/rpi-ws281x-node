@@ -405,7 +405,7 @@ napi_value get_channel_brightness_val(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  status = napi_create_int32(env, ws2811.channel[data->channel_arr_index].brightness, &result);
+  status = napi_create_uint32(env, ws2811.channel[data->channel_arr_index].brightness, &result);
 
   if (status != napi_ok) {
     throw_generic_error(env);
