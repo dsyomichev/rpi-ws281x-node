@@ -144,11 +144,10 @@ napi_status push_channel_leds_arr(napi_env env, int channel_arr_index) {
   return napi_ok;
 }
 
-prop_data channel_gpionum_prop_data[RPI_PWM_CHANNELS];
-
 napi_property_descriptor make_channel_gpionum_prop(int channel_arr_index) {
-  static char       name[] = "gpionum";
-  prop_data *data = &channel_gpionum_prop_data[channel_arr_index];
+  static prop_data channel_gpionum_prop_data[RPI_PWM_CHANNELS];
+  static char      name[] = "gpionum";
+  prop_data       *data = &channel_gpionum_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
@@ -157,9 +156,9 @@ napi_property_descriptor make_channel_gpionum_prop(int channel_arr_index) {
 }
 
 napi_value get_channel_gpionum_val(napi_env env, napi_callback_info info) {
-  napi_value        result;
-  napi_status       status;
-  prop_data *data;
+  napi_value  result;
+  napi_status status;
+  prop_data  *data;
 
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
@@ -177,9 +176,9 @@ napi_value get_channel_gpionum_val(napi_env env, napi_callback_info info) {
 }
 
 napi_value set_channel_gpionum_val(napi_env env, napi_callback_info info) {
-  napi_status       status;
-  prop_data *data;
-  int               value;
+  napi_status status;
+  prop_data  *data;
+  int         value;
 
   status = parse_arg_value_int32(env, info, &value, (void **)&data);
 
@@ -193,11 +192,10 @@ napi_value set_channel_gpionum_val(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
-prop_data channel_invert_prop_data[RPI_PWM_CHANNELS];
-
 napi_property_descriptor make_channel_invert_prop(int channel_arr_index) {
-  static char       name[] = "invert";
-  prop_data *data = &channel_invert_prop_data[channel_arr_index];
+  static prop_data channel_invert_prop_data[RPI_PWM_CHANNELS];
+  static char      name[] = "invert";
+  prop_data       *data = &channel_invert_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
@@ -206,9 +204,9 @@ napi_property_descriptor make_channel_invert_prop(int channel_arr_index) {
 }
 
 napi_value get_channel_invert_val(napi_env env, napi_callback_info info) {
-  napi_value        result;
-  napi_status       status;
-  prop_data *data;
+  napi_value  result;
+  napi_status status;
+  prop_data  *data;
 
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
@@ -226,9 +224,9 @@ napi_value get_channel_invert_val(napi_env env, napi_callback_info info) {
 }
 
 napi_value set_channel_invert_val(napi_env env, napi_callback_info info) {
-  napi_status       status;
-  int               value;
-  prop_data *data;
+  napi_status status;
+  int         value;
+  prop_data  *data;
 
   status = parse_arg_value_int32(env, info, &value, (void **)&data);
 
@@ -242,11 +240,10 @@ napi_value set_channel_invert_val(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
-prop_data channel_count_prop_data[RPI_PWM_CHANNELS];
-
 napi_property_descriptor make_channel_count_prop(int channel_arr_index) {
-  static char       name[] = "count";
-  prop_data *data = &channel_count_prop_data[channel_arr_index];
+  static prop_data channel_count_prop_data[RPI_PWM_CHANNELS];
+  static char      name[] = "count";
+  prop_data       *data = &channel_count_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
@@ -255,9 +252,9 @@ napi_property_descriptor make_channel_count_prop(int channel_arr_index) {
 }
 
 napi_value get_channel_count_val(napi_env env, napi_callback_info info) {
-  napi_value        result;
-  napi_status       status;
-  prop_data *data;
+  napi_value  result;
+  napi_status status;
+  prop_data  *data;
 
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
@@ -275,9 +272,9 @@ napi_value get_channel_count_val(napi_env env, napi_callback_info info) {
 }
 
 napi_value set_channel_count_val(napi_env env, napi_callback_info info) {
-  napi_status       status;
-  prop_data *data;
-  int               value;
+  napi_status status;
+  prop_data  *data;
+  int         value;
 
   status = parse_arg_value_int32(env, info, &value, (void **)&data);
 
@@ -291,11 +288,10 @@ napi_value set_channel_count_val(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
-prop_data channel_strip_type_prop_data[RPI_PWM_CHANNELS];
-
 napi_property_descriptor make_channel_strip_type_prop(int channel_arr_index) {
-  static char       name[] = "strip_type";
-  prop_data *data = &channel_strip_type_prop_data[channel_arr_index];
+  static prop_data channel_strip_type_prop_data[RPI_PWM_CHANNELS];
+  static char      name[] = "strip_type";
+  prop_data       *data = &channel_strip_type_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
@@ -304,9 +300,9 @@ napi_property_descriptor make_channel_strip_type_prop(int channel_arr_index) {
 }
 
 napi_value get_channel_strip_type_val(napi_env env, napi_callback_info info) {
-  napi_value        result;
-  napi_status       status;
-  prop_data *data;
+  napi_value  result;
+  napi_status status;
+  prop_data  *data;
 
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
@@ -324,9 +320,9 @@ napi_value get_channel_strip_type_val(napi_env env, napi_callback_info info) {
 }
 
 napi_value set_channel_strip_type_val(napi_env env, napi_callback_info info) {
-  napi_status       status;
-  prop_data *data;
-  int               value;
+  napi_status status;
+  prop_data  *data;
+  int         value;
 
   status = parse_arg_value_int32(env, info, &value, (void **)&data);
 
@@ -340,13 +336,12 @@ napi_value set_channel_strip_type_val(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
-prop_data channel_leds_prop_data[RPI_PWM_CHANNELS];
-
 napi_property_descriptor make_channel_leds_prop(napi_env env, int channel_arr_index) {
-  static char       name[] = "leds";
-  napi_value        value;
-  napi_status       status;
-  prop_data *data = &channel_leds_prop_data[channel_arr_index];
+  static prop_data channel_leds_prop_data[RPI_PWM_CHANNELS];
+  static char      name[] = "leds";
+  napi_value       value;
+  napi_status      status;
+  prop_data       *data = &channel_leds_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
@@ -360,11 +355,10 @@ napi_property_descriptor make_channel_leds_prop(napi_env env, int channel_arr_in
   return make_value_prop(name, value, (void *)data);
 }
 
-prop_data channel_brightnesss_prop_data[RPI_PWM_CHANNELS];
-
 napi_property_descriptor make_channel_brightness_prop(int channel_arr_index) {
-  static char       name[] = "brightness";
-  prop_data *data = &channel_brightnesss_prop_data[channel_arr_index];
+  static prop_data channel_brightnesss_prop_data[RPI_PWM_CHANNELS];
+  static char      name[] = "brightness";
+  prop_data       *data = &channel_brightnesss_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
@@ -373,9 +367,9 @@ napi_property_descriptor make_channel_brightness_prop(int channel_arr_index) {
 }
 
 napi_value get_channel_brightness_val(napi_env env, napi_callback_info info) {
-  napi_value        result;
-  napi_status       status;
-  prop_data *data;
+  napi_value  result;
+  napi_status status;
+  prop_data  *data;
 
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
@@ -393,9 +387,9 @@ napi_value get_channel_brightness_val(napi_env env, napi_callback_info info) {
 }
 
 napi_value set_channel_brightness_val(napi_env env, napi_callback_info info) {
-  napi_status       status;
-  int               value;
-  prop_data *data;
+  napi_status status;
+  int         value;
+  prop_data  *data;
 
   status = parse_arg_value_int32(env, info, &value, (void **)&data);
 
@@ -409,11 +403,10 @@ napi_value set_channel_brightness_val(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
-prop_data channel_wshift_prop_data[RPI_PWM_CHANNELS];
-
 napi_property_descriptor make_channel_wshift_prop(int channel_arr_index) {
-  static char       name[] = "wshift";
-  prop_data *data = &channel_wshift_prop_data[channel_arr_index];
+  static prop_data channel_wshift_prop_data[RPI_PWM_CHANNELS];
+  static char      name[] = "wshift";
+  prop_data       *data = &channel_wshift_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
@@ -422,9 +415,9 @@ napi_property_descriptor make_channel_wshift_prop(int channel_arr_index) {
 }
 
 napi_value get_channel_wshift_val(napi_env env, napi_callback_info info) {
-  napi_value        result;
-  napi_status       status;
-  prop_data *data;
+  napi_value  result;
+  napi_status status;
+  prop_data  *data;
 
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
@@ -444,8 +437,9 @@ napi_value get_channel_wshift_val(napi_env env, napi_callback_info info) {
 prop_data channel_rshift_prop_data[RPI_PWM_CHANNELS];
 
 napi_property_descriptor make_channel_rshift_prop(int channel_arr_index) {
-  static char       name[] = "rshift";
-  prop_data *data = &channel_rshift_prop_data[channel_arr_index];
+  static prop_data channel_rshift_prop_data[RPI_PWM_CHANNELS];
+  static char      name[] = "rshift";
+  prop_data       *data = &channel_rshift_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
@@ -454,9 +448,9 @@ napi_property_descriptor make_channel_rshift_prop(int channel_arr_index) {
 }
 
 napi_value get_channel_rshift_val(napi_env env, napi_callback_info info) {
-  napi_value        result;
-  napi_status       status;
-  prop_data *data;
+  napi_value  result;
+  napi_status status;
+  prop_data  *data;
 
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
@@ -476,8 +470,9 @@ napi_value get_channel_rshift_val(napi_env env, napi_callback_info info) {
 prop_data channel_gshift_prop_data[RPI_PWM_CHANNELS];
 
 napi_property_descriptor make_channel_gshift_prop(int channel_arr_index) {
-  static char       name[] = "gshift";
-  prop_data *data = &channel_gshift_prop_data[channel_arr_index];
+  static prop_data channel_gshift_prop_data[RPI_PWM_CHANNELS];
+  static char      name[] = "gshift";
+  prop_data       *data = &channel_gshift_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
@@ -486,9 +481,9 @@ napi_property_descriptor make_channel_gshift_prop(int channel_arr_index) {
 }
 
 napi_value get_channel_gshift_val(napi_env env, napi_callback_info info) {
-  napi_value        result;
-  napi_status       status;
-  prop_data *data;
+  napi_value  result;
+  napi_status status;
+  prop_data  *data;
 
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
@@ -508,8 +503,9 @@ napi_value get_channel_gshift_val(napi_env env, napi_callback_info info) {
 prop_data channel_bshift_prop_data[RPI_PWM_CHANNELS];
 
 napi_property_descriptor make_channel_bshift_prop(int channel_arr_index) {
-  static char       name[] = "bshift";
-  prop_data *data = &channel_bshift_prop_data[channel_arr_index];
+  static prop_data channel_bshift_prop_data[RPI_PWM_CHANNELS];
+  static char      name[] = "bshift";
+  prop_data       *data = &channel_bshift_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
@@ -518,9 +514,9 @@ napi_property_descriptor make_channel_bshift_prop(int channel_arr_index) {
 }
 
 napi_value get_channel_bshift_val(napi_env env, napi_callback_info info) {
-  napi_value        result;
-  napi_status       status;
-  prop_data *data;
+  napi_value  result;
+  napi_status status;
+  prop_data  *data;
 
   status = napi_get_cb_info(env, info, NULL, NULL, NULL, (void **)&data);
 
@@ -538,8 +534,9 @@ napi_value get_channel_bshift_val(napi_env env, napi_callback_info info) {
 }
 
 napi_property_descriptor make_channel_gamma_prop(int channel_arr_index) {
-  static char       name[] = "gamma";
-  prop_data *data = &channel_bshift_prop_data[channel_arr_index];
+  static prop_data channel_gamma_prop_data[RPI_PWM_CHANNELS];
+  static char      name[] = "gamma";
+  prop_data       *data = &channel_gamma_prop_data[channel_arr_index];
 
   data->name = name;
   data->channel_arr_index = channel_arr_index;
@@ -551,7 +548,7 @@ napi_value get_channel_gamma_val(napi_env env, napi_callback_info info) {
   napi_value        result, buffer;
   napi_status       status;
   int               gamma_table_index;
-  prop_data *data;
+  prop_data        *data;
   uint8_t          *buffer_data;
   ws2811_channel_t *channel;
 

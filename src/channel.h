@@ -16,51 +16,40 @@ napi_status init_channel_leds_arr(napi_env, napi_value *target, int channel_arr_
 napi_status free_channel_leds_arr(napi_env env, int channel_arr_index);
 napi_status push_channel_leds_arr(napi_env env, int channel_arr_index);
 
-prop_data                channel_gpionum_prop_data[RPI_PWM_CHANNELS];
 napi_property_descriptor make_channel_gpionum_prop(int channel_arr_index);
 napi_value               get_channel_gpionum_val(napi_env env, napi_callback_info info);
 napi_value               set_channel_gpionum_val(napi_env env, napi_callback_info info);
 
-prop_data                channel_invert_prop_data[RPI_PWM_CHANNELS];
 napi_property_descriptor make_channel_invert_prop(int channel_arr_index);
 napi_value               get_channel_invert_val(napi_env env, napi_callback_info info);
 napi_value               set_channel_invert_val(napi_env env, napi_callback_info info);
 
-prop_data                channel_count_prop_data[RPI_PWM_CHANNELS];
 napi_property_descriptor make_channel_count_prop(int channel_arr_index);
 napi_value               get_channel_count_val(napi_env env, napi_callback_info info);
 napi_value               set_channel_count_val(napi_env env, napi_callback_info info);
 
-prop_data                channel_strip_type_prop_data[RPI_PWM_CHANNELS];
 napi_property_descriptor make_channel_strip_type_prop(int channel_arr_index);
 napi_value               get_channel_strip_type_val(napi_env env, napi_callback_info info);
 napi_value               set_channel_strip_type_val(napi_env env, napi_callback_info info);
 
-prop_data                channel_leds_prop_data[RPI_PWM_CHANNELS];
 napi_property_descriptor make_channel_leds_prop(napi_env env, int channel_arr_index);
 
-prop_data                channel_brightness_prop_data[RPI_PWM_CHANNELS];
 napi_property_descriptor make_channel_brightness_prop(int channel_arr_index);
 napi_value               get_channel_brightness_val(napi_env env, napi_callback_info info);
 napi_value               set_channel_brightness_val(napi_env env, napi_callback_info info);
 
-prop_data                channel_wshift_prop_data[RPI_PWM_CHANNELS];
 napi_property_descriptor make_channel_wshift_prop(int channel_arr_index);
 napi_value               get_channel_wshift_val(napi_env env, napi_callback_info info);
 
-prop_data                channel_rshfit_prop_data[RPI_PWM_CHANNELS];
 napi_property_descriptor make_channel_rshift_prop(int channel_arr_index);
 napi_value               get_channel_rshift_val(napi_env env, napi_callback_info info);
 
-prop_data                channel_gshift_prop_data[RPI_PWM_CHANNELS];
 napi_property_descriptor make_channel_gshift_prop(int channel_arr_index);
 napi_value               get_channel_gshift_val(napi_env env, napi_callback_info info);
 
-prop_data                channel_bshift_prop_data[RPI_PWM_CHANNELS];
 napi_property_descriptor make_channel_bshift_prop(int channel_arr_index);
 napi_value               get_channel_bshift_val(napi_env env, napi_callback_info info);
 
-prop_data                channel_gamma_prop_data[RPI_PWM_CHANNELS];
 napi_property_descriptor make_channel_gamma_prop(int channel_arr_index);
 napi_value               get_channel_gamma_val(napi_env env, napi_callback_info info);
 
